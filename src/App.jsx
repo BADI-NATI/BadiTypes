@@ -48,6 +48,7 @@ function App() {
   const handleRestart = () => {
     setWordsDisplay(false);
     setActiveWordIndex(0);
+    setStartIndex(0);
     setCorrectWordArray(new Array(WordCloud.length).fill(null));
     setTotalSeconds(60);
     setIsRunning(false);
