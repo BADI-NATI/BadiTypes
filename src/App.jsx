@@ -2,16 +2,16 @@ import { useEffect, useRef, useState } from "react";
 import { VscDebugRestart } from "react-icons/vsc";
 import Word from "./components/Word";
 
-const WordCloud =
-  `windows nice close you too being better now later how base not said heat play cat state cat start sort nice love set peace horse bed head node code learn fun make help work play call soon hold land body down farm size keep wide high area mean grow dark hour rock song turn mark gate line land tool wood roll term main born care form food seem well name view road rule care form food seem well name view road rule care form food seem well name view road rule care form food seem well name view road rule care form food seem well name view road rule care form food seem well name view road rule care form food seem well name view road rule care form food seem well name view road rule care form food seem well name view road rule care form food seem well name view road rule care form food seem well name view road rule care form food seem well name view road rule care form food seem well name view road rule care form food seem well name view road rule care form food seem well name view road rule care form food seem well name view road rule care form food seem well name view road rule care form food seem well name view road rule care form food seem well name view road rule care form food seem well name view road rule care form food seem well name view road rule care form food seem well name view road rule care form food seem well name view road rule care form food seem well name view road rule care form food seem well name view road rule care form food seem well name view road rule care form food seem well name view road rule care form food seem well name view road rule care form food seem well name view road rule`.split(
-    " "
-  );
+import { EnglishWordCloud } from "./components/WordCloud";
+import { AmharicWordCloud } from "./components/WordCloud";
 
 function App() {
+  const [language, setLanguage] = useState(EnglishWordCloud);
+  const [languageOptionsOpen, setLanguageOptionsOpen] = useState(false);
   const [userInput, setUserInput] = useState("");
   const [activeWordIndex, setActiveWordIndex] = useState(0);
   const [correctWordArray, setCorrectWordArray] = useState(
-    new Array(WordCloud.length).fill(null)
+    new Array(language.length).fill(null)
   );
   const [isRunning, setIsRunning] = useState(false);
   const [totalSeconds, setTotalSeconds] = useState(60);
@@ -49,7 +49,7 @@ function App() {
     setWordsDisplay(false);
     setActiveWordIndex(0);
     setStartIndex(0);
-    setCorrectWordArray(new Array(WordCloud.length).fill(null));
+    setCorrectWordArray(new Array(language.length).fill(null));
     setTotalSeconds(60);
     setIsRunning(false);
   };
@@ -80,7 +80,7 @@ function App() {
     // Check if user has completed typing a word (input ends with a space)
     if (input.endsWith(" ")) {
       setIsRunning(true);
-      const isCorrect = trimmedInput === WordCloud[activeWordIndex];
+      const isCorrect = trimmedInput === language[activeWordIndex];
       setCorrectWordArray((prevArray) => {
         const newArray = [...prevArray];
         newArray[activeWordIndex] = isCorrect;
@@ -97,6 +97,7 @@ function App() {
       setUserInput(""); // Clear input field
     }
   };
+
   // Calculate minutes and seconds from totalSeconds
   const minutes = Math.floor(totalSeconds / 60);
   const seconds = totalSeconds % 60;
@@ -107,13 +108,49 @@ function App() {
   ).length;
   const WPM = Math.floor((correctWordsCount / 60) * totalSeconds);
 
-  const displayWords = WordCloud.slice(
+  const displayWords = language.slice(
     startIndex,
     startIndex + linesToShow * wordsPerLine
   );
 
+  const handleLanguageChange = (selectedLanguage) => {
+    setLanguage(
+      selectedLanguage === "English" ? EnglishWordCloud : AmharicWordCloud
+    );
+    setLanguageOptionsOpen(false);
+  };
+
   return (
-    <div className="h-[710px] flex justify-center">
+    <div className="h-[710px] flex justify-center relative">
+      {/* Language dropdown */}
+      <div className="absolute top-1 right-3 z-10">
+        <div className="relative">
+          <button
+            disabled={isRunning}
+            onClick={() => setLanguageOptionsOpen(!languageOptionsOpen)}
+            className="text-[15px] text-white p-1 bg-blue-500 hover:bg-blue-600 focus:outline-none"
+          >
+            Language
+          </button>
+          {languageOptionsOpen && (
+            <div className="absolute right-0 mt-1 w-36 bg-white rounded-md shadow-lg z-20">
+              <button
+                onClick={() => handleLanguageChange("English")}
+                className="block w-full text-left px-4 py-2 text-sm text-gray-800 hover:bg-gray-200"
+              >
+                English
+              </button>
+              <button
+                onClick={() => handleLanguageChange("Amharic")}
+                className="block w-full text-left px-4 py-2 text-sm text-gray-800 hover:bg-gray-200"
+              >
+                Amharic
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+
       <div className="flex flex-col m-32">
         <div className="w-[1000px] h-[120px] bg-white text-black rounded-md p-3 text-2xl font-poppins leading-6 border-1 border-blue-50 line-clamp-2 tracking-wide flex flex-wrap gap-2 items-center ">
           {!wordsDisplay ? (
