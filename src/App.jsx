@@ -13,6 +13,7 @@ function App() {
   const [correctWordArray, setCorrectWordArray] = useState(
     new Array(language.length).fill(null)
   );
+
   const [isRunning, setIsRunning] = useState(false);
   const [totalSeconds, setTotalSeconds] = useState(60);
   const [wordsDisplay, setWordsDisplay] = useState(false);
@@ -108,6 +109,14 @@ function App() {
   ).length;
   const WPM = Math.floor((correctWordsCount / 60) * totalSeconds);
 
+  // Calculate the WPM.
+  const IncorrectWordsCount = correctWordArray.filter(
+    (item) => item === false
+  ).length;
+  const Accuracy = Math.floor(
+    (1 - IncorrectWordsCount / (activeWordIndex - 1)) * 100
+  );
+
   const displayWords = language.slice(
     startIndex,
     startIndex + linesToShow * wordsPerLine
@@ -164,7 +173,8 @@ function App() {
             ))
           ) : (
             <div className="font-bold text-5xl text-gray-600">
-              Words per minute: {WPM}
+              Words per minute: {WPM} <br />
+              Accuracy: {Accuracy}%
             </div>
           )}
         </div>
