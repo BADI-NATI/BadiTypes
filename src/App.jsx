@@ -23,6 +23,21 @@ function App() {
   const linesToShow = 2; // Number of lines to display at a time
   const [startIndex, setStartIndex] = useState(0); // Track the start index of displayed words
 
+  // Function to shuffle the language array
+  const shuffleLanguage = (array) => {
+    const shuffledArray = [...array];
+    for (let i = shuffledArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+    }
+    return shuffledArray;
+  };
+
+  useEffect(() => {
+    // Shuffle the language array when the component mounts or when language changes
+    setLanguage(shuffleLanguage(language));
+  }, []); // Empty dependency array means this effect runs once on component mount
+
   useEffect(() => {
     let intervalId = null;
 
@@ -55,6 +70,7 @@ function App() {
     setCorrectWordArray(new Array(language.length).fill(null));
     setTotalSeconds(60);
     setIsRunning(false);
+    setLanguage(shuffleLanguage(language));
   };
 
   useEffect(() => {
