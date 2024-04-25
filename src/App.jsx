@@ -4,6 +4,7 @@ import Word from "./components/Word";
 
 import { EnglishWordCloud } from "./components/WordCloud";
 import { AmharicWordCloud } from "./components/WordCloud";
+import TimerDisplay from "./components/TimerDisplay";
 
 function App() {
   const [language, setLanguage] = useState(EnglishWordCloud);
@@ -50,6 +51,7 @@ function App() {
     setWordsDisplay(false);
     setActiveWordIndex(0);
     setStartIndex(0);
+    setUserInput("");
     setCorrectWordArray(new Array(language.length).fill(null));
     setTotalSeconds(60);
     setIsRunning(false);
@@ -98,10 +100,6 @@ function App() {
       setUserInput(""); // Clear input field
     }
   };
-
-  // Calculate minutes and seconds from totalSeconds
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
 
   // Calculate the WPM.
   const correctWordsCount = correctWordArray.filter(
@@ -187,13 +185,7 @@ function App() {
             disabled={wordsDisplay}
             ref={inputRef}
           />
-          <div className="w-[80px] bg-[#3c4d5c] text-white text-2xl p-3 flex justify-center rounded-md">
-            {totalSeconds === 60
-              ? "1:00"
-              : `${minutes < 10 ? "0" + minutes : minutes}:${
-                  seconds < 10 ? "0" + seconds : seconds
-                }`}
-          </div>
+          <TimerDisplay totalSeconds={totalSeconds} />
           <button
             onClick={handleRestart}
             className="bg-[#428bca] text-white text-2xl p-4 flex justify-center rounded-md hover:bg-[#3875ab] transition-all cursor-pointer"
